@@ -20,12 +20,24 @@ public class UserManager {
 		return instance;
 	}
 	
+	public UserDTO login(String userId) {
+		return userDao.login(userId);
+	}
+	
 	public UserDTO login(String userId, String name) {
 		return userDao.login(userId, name);
 	}
 	
+	public UserDTO login(String userId, String name, int platform) {
+		return userDao.login(userId, name, platform);
+	}
+	
 	public int insertUser(String userId, String name) {
 		return userDao.insertUser(userId, name);
+	}
+	
+	public int insertUser(String userId, String name, int platform) {
+		return userDao.insertUser(userId, name, platform);
 	}
 	
 }

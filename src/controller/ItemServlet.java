@@ -8,23 +8,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import manager.ItemManager;
+
 import org.json.simple.JSONObject;
 
-import manager.MyPageManager;
-import DTO.MyPageDTO;
-import DTO.ScoreDTO;
+import DTO.ItemDTO;
 
 /**
  * Servlet implementation class MyPageServlet
  */
-public class MyPageServlet extends HttpServlet {
+public class ItemServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	MyPageManager myPageM;
+	ItemManager itemM;
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MyPageServlet() {
+    public ItemServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,29 +45,31 @@ public class MyPageServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");
 		
-		myPageM = MyPageManager.getInstance();
+		itemM = ItemManager.getInstance();
 		
 		String userId = request.getParameter("userId");
-		String color = request.getParameter("color");
-		String acc = request.getParameter("acc");
+		int item1Cnt = Integer.parseInt(request.getParameter("item1Cnt"));
+		int item2Cnt = Integer.parseInt(request.getParameter("item2Cnt"));
+		int item3Cnt = Integer.parseInt(request.getParameter("item3Cnt"));
+		int item4Cnt = Integer.parseInt(request.getParameter("item4Cnt"));
 		
 		String service = request.getParameter("service");
-		System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " color : " + color + " acc : " + acc);
+		//System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " color : " + color + " acc : " + acc);
 		switch(service) {
 		case "insert" :
-			jsonOut(response, myPageM.insertMyPage(new MyPageDTO(userId, color, acc)));
+			jsonOut(response, itemM.insertItem(new ItemDTO(userId, item1Cnt,item2Cnt,item3Cnt,item4Cnt)));
 			break;
 		
 		case "update" :
-			jsonOut(response, myPageM.updateMyPage(new MyPageDTO(userId, color, acc)));
+			jsonOut(response, itemM.updateItem(new ItemDTO(userId, item1Cnt,item2Cnt,item3Cnt,item4Cnt)));
 			break;
 		
 		case "get" :
-			jsonOut(response, myPageM.getMyPage(userId));
+			jsonOut(response, itemM.getItem(userId));
 			break;
-		
+		/*
 		case "all" :
-			break;
+			break;*/
 		}
 	}
 	
@@ -89,9 +91,7 @@ public class MyPageServlet extends HttpServlet {
 			myPageJson.put("resultCode", "-1");
 			myPageJson.put("errorCode", "");
 			myPageJson.put("errorDescription", "");
-			
 		} finally {
-			
 			PrintWriter pw = response.getWriter();
 			pw.print(myPageJson.toString());
 			pw.close();
@@ -99,15 +99,17 @@ public class MyPageServlet extends HttpServlet {
 		return ;
 	}
 	
-	private void jsonOut(HttpServletResponse response, MyPageDTO myPage) throws ServletException, IOException {
+	private void jsonOut(HttpServletResponse response, ItemDTO item) throws ServletException, IOException {
 		JSONObject myPageJson = new JSONObject();
 		try {
-			if(myPage != null) {
+			if(item != null) {
 				myPageJson.put("resultCode", "1");
 				myPageJson.put("timestamp", System.currentTimeMillis());
-				myPageJson.put("userId", myPage.getUserId());
-				myPageJson.put("color", myPage.getColor());
-				myPageJson.put("acc", myPage.getAcc());
+				myPageJson.put("userId", item.getUserId());
+				myPageJson.put("item1Cnt", item.getItem1Cnt());
+				myPageJson.put("item2Cnt", item.getItem2Cnt());
+				myPageJson.put("item3Cnt", item.getItem3Cnt());
+				myPageJson.put("item4Cnt", item.getItem4Cnt());
 			} else {
 				myPageJson.put("resultCode", "0");
 				myPageJson.put("errorCode", "");

@@ -31,22 +31,22 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>ScoreServlet</display-name>
-    <servlet-name>ScoreServlet</servlet-name>
-    <servlet-class>controller.ScoreServlet</servlet-class>
+    <display-name>MyScoreServlet</display-name>
+    <servlet-name>MyScoreServlet</servlet-name>
+    <servlet-class>controller.MyScoreServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ScoreServlet</servlet-name>
-    <url-pattern>/score.do</url-pattern>
+    <servlet-name>MyScoreServlet</servlet-name>
+    <url-pattern>/myscore.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>MyPageServlet</display-name>
-    <servlet-name>MyPageServlet</servlet-name>
-    <servlet-class>controller.MyPageServlet</servlet-class>
+    <display-name>ItemServlet</display-name>
+    <servlet-name>ItemServlet</servlet-name>
+    <servlet-class>controller.ItemServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>MyPageServlet</servlet-name>
-    <url-pattern>/myPage.do</url-pattern>
+    <servlet-name>ItemServlet</servlet-name>
+    <url-pattern>/item.do</url-pattern>
   </servlet-mapping>
 </web-app>

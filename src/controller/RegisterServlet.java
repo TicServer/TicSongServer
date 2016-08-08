@@ -39,9 +39,10 @@ public class RegisterServlet extends HttpServlet {
 		
 		String userId = request.getParameter("userId");
 		String name = request.getParameter("name");
+		int platform = Integer.parseInt(request.getParameter("platform"));
 		
 		UserManager userM = UserManager.getInstance();
-		int result = userM.insertUser(userId, name);
+		int result = userM.insertUser(userId, name, platform);
 		
 		String userAgent = request.getHeader("User-Agent").split("/")[0];
 		JSONObject registerJson = new JSONObject();
@@ -55,6 +56,7 @@ public class RegisterServlet extends HttpServlet {
 					registerJson.put("timestamp", System.currentTimeMillis());
 					registerJson.put("userId", userId);
 					registerJson.put("name", name);
+					registerJson.put("platform", platform);
 				} else {
 					registerJson.put("resultCode", "0");
 					registerJson.put("errorCode", "");

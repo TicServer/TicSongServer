@@ -7,24 +7,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.DBConnection;
-import DTO.ScoreDTO;
+import module.DBConnection;
+import DTO.MyScoreDTO;
 import DTO.UserDTO;
 
-public class ScoreDAO {
+public class MyScoreDAO {
 	
-	private static ScoreDAO scoreDAO;
+	private final String USER_CHECK_SQL = "select * from myscore where userid=?;";
+	private final String INSERT_MYSCORE_SQL = "insert into myscore (userid,exp,userlevel) values(?,?,?);";
+	private final String UPDATE_MYSCORE_SQL = "update myscore set exp=?, userlevel=? where userid=?;";
+	private final String RETRIEVE_MYSCORE_SQL = "select * from myscore where userid=?;";
+	
+	private static MyScoreDAO myScoreDAO;
 	static {
-		scoreDAO = new ScoreDAO();
+		myScoreDAO = new MyScoreDAO();
 	}
-	public static ScoreDAO getInstance() {
-		return scoreDAO;
+	public static MyScoreDAO getInstance() {
+		return myScoreDAO;
 	}
-	private ScoreDAO(){
-		
-	}
+	private MyScoreDAO(){}
 	
-	public int insertScore(ScoreDTO score) {
+	
+	
+	
+	public int insertMyScore(MyScoreDTO myScore) {
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		int success = 0;
@@ -33,10 +39,10 @@ public class ScoreDAO {
 			conn = DBConnection.getInstance().getConn();
 			conn.setAutoCommit(false);
 			
-			String sql = " insert into score (userid,score,userlevel) values(?,?,?);";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, score.getUserId());pstmt.setInt(2, score.getScore());
-			pstmt.setInt(3, score.getUserLevel());
+			pstmt = conn.prepareStatement(INSERT_MYSCORE_SQL);
+			pstmt.setString(1, myScore.getUserId());
+			pstmt.setInt(2, myScore.getExp());
+			pstmt.setInt(3, myScore.getUserLevel());
 			success = pstmt.executeUpdate();
 			conn.commit();
 		} catch (SQLException e ) {
@@ -71,7 +77,7 @@ public class ScoreDAO {
 		return success;
 	}
 	
-	public int updateScore(ScoreDTO score) {
+	public int updateMyScore(MyScoreDTO myScore) {
 		
 		PreparedStatement pstmt = null;
 		Connection conn = null;
@@ -81,18 +87,17 @@ public class ScoreDAO {
 		try {
 			conn = DBConnection.getInstance().getConn();
 
-            String sql = "select * from user where userid=?;";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, score.getUserId());
+            pstmt = conn.prepareStatement(USER_CHECK_SQL);
+            pstmt.setString(1, myScore.getUserId());
             rs = pstmt.executeQuery();
                 
             if(rs.next()){
             	conn.setAutoCommit(false);
-					String updateSql = "update score set score=?, userlevel=? where userid=?;";
-                    pstmt = conn.prepareStatement(updateSql);
-                    pstmt.setInt(1, score.getScore());
-                    pstmt.setInt(2, score.getUserLevel());
-                    pstmt.setString(3, score.getUserId());
+					
+                    pstmt = conn.prepareStatement(UPDATE_MYSCORE_SQL);
+                    pstmt.setInt(1, myScore.getExp());
+                    pstmt.setInt(2, myScore.getUserLevel());
+                    pstmt.setString(3, myScore.getUserId());
                     pstmt.executeUpdate();
                     
                     success = 1;
@@ -132,23 +137,22 @@ public class ScoreDAO {
 		return success;
 	}
 	
-	public ScoreDTO getScore(String userId) {
+	public MyScoreDTO getMyScore(String userId) {
 		
 		PreparedStatement pstmt = null;
-		ScoreDTO scoreDTO = null;
+		MyScoreDTO myScoreDTO = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		
 		try {
 			conn = DBConnection.getInstance().getConn();
 			
-			String sql = "select * from score where userid=?;";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(RETRIEVE_MYSCORE_SQL);
 			pstmt.setString(1,userId);
 			rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				scoreDTO = new ScoreDTO(userId, rs.getInt("score"),rs.getInt("userlevel"));
+				myScoreDTO = new MyScoreDTO(userId, rs.getInt("exp"),rs.getInt("userlevel"));
 			}
 		} catch ( Exception ex ) {
 			ex.printStackTrace();
@@ -161,9 +165,11 @@ public class ScoreDAO {
 				ex.printStackTrace();
 			}
 		}
-		return scoreDTO;
+		return myScoreDTO;
 	}
 	
+	
+	/*
 	public List<ScoreDTO> getScores() {
 		final String sql =  "select * from score;";
 		
@@ -195,6 +201,6 @@ public class ScoreDAO {
             } 
 	    }
 		return scoreList;
-	}
+	}*/
 
 }

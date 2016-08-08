@@ -11,7 +11,12 @@ public class MyScoreDTO implements Serializable{
 
     public MyScoreDTO() {
     }
-
+    
+    public MyScoreDTO(String userId, int exp, int userLevel) {
+        this.userId = userId;
+        this.exp = exp;
+        this.userLevel = userLevel;
+    }
     public MyScoreDTO(int exp, String userId, int userLevel) {
         this.exp = exp;
         this.userId = userId;

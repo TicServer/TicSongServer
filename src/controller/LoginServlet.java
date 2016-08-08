@@ -14,8 +14,8 @@ import manager.UserManager;
 
 import org.json.simple.JSONObject;
 
-import DAO.ScoreDAO;
-import DTO.ScoreDTO;
+//import DAO.ScoreDAO;
+//import DTO.ScoreDTO;
 import DTO.UserDTO;
 
 /**
@@ -61,6 +61,7 @@ public class LoginServlet extends HttpServlet {
 				loginJson.put("timestamp", System.currentTimeMillis());
 				loginJson.put("userId", userDTO.getUserId());
 				loginJson.put("name", userDTO.getName());
+				loginJson.put("platform", userDTO.getPlatform());
 				
 			} catch(NullPointerException npe) {
 				npe.printStackTrace();

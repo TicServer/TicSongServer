@@ -8,20 +8,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import manager.ScoreManager;
-import manager.UserManager;
+import manager.MyScoreManager;
 
 import org.json.simple.JSONObject;
 
-import DTO.ScoreDTO;
-import DTO.UserDTO;
+import DTO.MyScoreDTO;
 
 /**
  * Servlet implementation class ScoreServlet
  */
-public class ScoreServlet extends HttpServlet {
+public class MyScoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ScoreManager scoreMgr;
+	private MyScoreManager myScoreMgr;
   
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,29 +37,29 @@ public class ScoreServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");
 		
-		scoreMgr = ScoreManager.getInstance();
+		myScoreMgr = MyScoreManager.getInstance();
 		
 		String userId = request.getParameter("userId");
-		String score = request.getParameter("score");
-		String userLevel = request.getParameter("userLevel");
+		int exp = Integer.parseInt(request.getParameter("exp"));
+		int userLevel = Integer.parseInt(request.getParameter("userLevel"));
 		
 		String service = request.getParameter("service");
-		System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " score : " + score + " userLevel : " + userLevel);
+		//System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " score : " + score + " userLevel : " + userLevel);
 		switch(service) {
 			case "insert" :
-				jsonOut(response, scoreMgr.insertScore(new ScoreDTO(userId, Integer.parseInt(score), Integer.parseInt(userLevel))));
+				jsonOut(response, myScoreMgr.insertMyScore(new MyScoreDTO(userId, exp, userLevel)));
 				break;
 			
 			case "update" :
-				jsonOut(response, scoreMgr.updateScore(new ScoreDTO(userId, Integer.parseInt(score), Integer.parseInt(userLevel))));
+				jsonOut(response, myScoreMgr.updateMyScore(new MyScoreDTO(userId, exp, userLevel)));
 				break;
 			
 			case "get" :
-				jsonOut(response, scoreMgr.getScore(userId));
+				jsonOut(response, myScoreMgr.getMyScore(userId));
 				break;
 			
-			case "all" :
-				break;
+			/*case "all" :
+				break;*/
 		
 		}
 	}
@@ -94,14 +92,14 @@ public class ScoreServlet extends HttpServlet {
 		return ;
 	}
 	
-	private void jsonOut(HttpServletResponse response, ScoreDTO score) throws ServletException, IOException {
+	private void jsonOut(HttpServletResponse response, MyScoreDTO score) throws ServletException, IOException {
 		JSONObject scoreJson = new JSONObject();
 		try {
 			if(score != null) {
 				scoreJson.put("resultCode", "1");
 				scoreJson.put("timestamp", System.currentTimeMillis());
 				scoreJson.put("userId", score.getUserId());
-				scoreJson.put("score", score.getScore());
+				scoreJson.put("exp", score.getExp());
 				scoreJson.put("userLevel", score.getUserLevel());
 			} else {
 				scoreJson.put("resultCode", "0");

@@ -15,6 +15,14 @@ public class ItemDTO implements Serializable {
 
     public ItemDTO() {
     }
+    
+    public ItemDTO( String userId, int item1Cnt, int item2Cnt, int item3Cnt, int item4Cnt) {
+    	this.userId = userId;
+    	this.item1Cnt = item1Cnt;
+        this.item2Cnt = item2Cnt;
+        this.item3Cnt = item3Cnt;
+        this.item4Cnt = item4Cnt;
+    }
 
     public ItemDTO(int item1Cnt, int item2Cnt, int item3Cnt, int item4Cnt, String userId) {
         this.item1Cnt = item1Cnt;
@@ -64,15 +72,11 @@ public class ItemDTO implements Serializable {
         this.userId = userId;
     }
 
+	@Override
+	public String toString() {
+		return "ItemDTO [userId=" + userId + ", item1Cnt=" + item1Cnt
+				+ ", item2Cnt=" + item2Cnt + ", item3Cnt=" + item3Cnt
+				+ ", item4Cnt=" + item4Cnt + "]";
+	}
 
-    @Override
-    public String toString() {
-        return "ItemDTO{" +
-                "item1Cnt=" + item1Cnt +
-                ", userId='" + userId + '\'' +
-                ", item2Cnt=" + item2Cnt +
-                ", item3Cnt=" + item3Cnt +
-                ", item4Cnt=" + item4Cnt +
-                '}';
-    }
 }
