@@ -48,19 +48,26 @@ public class ItemServlet extends HttpServlet {
 		itemM = ItemManager.getInstance();
 		
 		String userId = request.getParameter("userId");
-		int item1Cnt = Integer.parseInt(request.getParameter("item1Cnt"));
-		int item2Cnt = Integer.parseInt(request.getParameter("item2Cnt"));
-		int item3Cnt = Integer.parseInt(request.getParameter("item3Cnt"));
-		int item4Cnt = Integer.parseInt(request.getParameter("item4Cnt"));
+		int item1Cnt,item2Cnt,item3Cnt,item4Cnt = 0;
 		
 		String service = request.getParameter("service");
-		//System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " color : " + color + " acc : " + acc);
+		System.out.println("Service : " + service);
 		switch(service) {
 		case "insert" :
+			item1Cnt = Integer.parseInt(request.getParameter("item1Cnt"));
+			item2Cnt = Integer.parseInt(request.getParameter("item2Cnt"));
+			item3Cnt = Integer.parseInt(request.getParameter("item3Cnt"));
+			item4Cnt = Integer.parseInt(request.getParameter("item4Cnt"));
+			
 			jsonOut(response, itemM.insertItem(new ItemDTO(userId, item1Cnt,item2Cnt,item3Cnt,item4Cnt)));
 			break;
 		
 		case "update" :
+			item1Cnt = Integer.parseInt(request.getParameter("item1Cnt"));
+			item2Cnt = Integer.parseInt(request.getParameter("item2Cnt"));
+			item3Cnt = Integer.parseInt(request.getParameter("item3Cnt"));
+			item4Cnt = Integer.parseInt(request.getParameter("item4Cnt"));
+			
 			jsonOut(response, itemM.updateItem(new ItemDTO(userId, item1Cnt,item2Cnt,item3Cnt,item4Cnt)));
 			break;
 		

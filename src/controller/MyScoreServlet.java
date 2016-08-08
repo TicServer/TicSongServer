@@ -40,17 +40,22 @@ public class MyScoreServlet extends HttpServlet {
 		myScoreMgr = MyScoreManager.getInstance();
 		
 		String userId = request.getParameter("userId");
-		int exp = Integer.parseInt(request.getParameter("exp"));
-		int userLevel = Integer.parseInt(request.getParameter("userLevel"));
+		int exp, userLevel = 0;
 		
 		String service = request.getParameter("service");
-		//System.out.println("MyPage @@ Service : " + service + " userId : " + userId + " score : " + score + " userLevel : " + userLevel);
+		System.out.println("Service : " + service);
 		switch(service) {
 			case "insert" :
+				exp = Integer.parseInt(request.getParameter("exp"));
+				userLevel = Integer.parseInt(request.getParameter("userLevel"));
+				
 				jsonOut(response, myScoreMgr.insertMyScore(new MyScoreDTO(userId, exp, userLevel)));
 				break;
 			
 			case "update" :
+				exp = Integer.parseInt(request.getParameter("exp"));
+				userLevel = Integer.parseInt(request.getParameter("userLevel"));
+				
 				jsonOut(response, myScoreMgr.updateMyScore(new MyScoreDTO(userId, exp, userLevel)));
 				break;
 			
