@@ -7,14 +7,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import DTO.UserDTO;
+import manager.ItemManager;
+import manager.MyScoreManager;
 import module.DBConnection;
+import DTO.ItemDTO;
+import DTO.LoginView;
+import DTO.MyScoreDTO;
+import DTO.UserDTO;
 
 public class UserDAO {
 	
 	private final String INSERT_USER_ID_NAME = "insert into user (userid,name) values(?,?);";
 	private final String INSERT_USER_ID_NAME_PLATFORM = "insert into user (userid,name,platform) values(?,?,?);";
 	
+	private final String LOGIN_VIEW = "select * from login_view where userid=? and name=? and platform=?;";
 	private final String LOGIN_BY_ID = "select * from user where userid=?";
 	private final String LOGIN_BY_ID_NAME = "select * from user where userid=? and name=?;";
 	private final String LOGIN_BY_ID_NAME_PLATFORM = "select * from user where userid=? and name=? and platform=?;";
@@ -121,8 +127,94 @@ public class UserDAO {
 	    }
 		return success;
 	}
-
 	
+
+	/* 실제 사용 login() */
+	public LoginView login(String userId, String name, int platform) {
+		
+		PreparedStatement pstmt = null;
+		LoginView loginView = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBConnection.getInstance().getConn();
+			
+			pstmt = conn.prepareStatement(LOGIN_VIEW);
+			pstmt.setString(1,userId);
+			pstmt.setString(2,name);
+			pstmt.setInt(3, platform);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				System.out.println("Old User Login;");
+				
+				loginView = new LoginView(rs.getString("userid"),rs.getString("name"),rs.getInt("platform")
+						,rs.getInt("exp"),rs.getInt("userLevel")
+						,rs.getInt("item1Cnt"),rs.getInt("item2Cnt"),rs.getInt("item3Cnt"),rs.getInt("item4Cnt"));
+			} else {
+				System.out.println("New User Login; welcome.");
+				if( insertUser(userId, name, platform)==1 ) {
+					System.out.println("New User Register. OK.");
+					
+					if( MyScoreManager.getInstance().insertMyScore(new MyScoreDTO(userId, 0, 1))==1 ) 
+						if( ItemManager.getInstance().insertItem(new ItemDTO(userId, 0, 0, 0, 0))==1 ) {
+							rs = pstmt.executeQuery();
+							if(rs.next()) {
+								loginView = new LoginView(rs.getString("userid"),rs.getString("name"),rs.getInt("platform")
+										,rs.getInt("exp"),rs.getInt("userLevel")
+										,rs.getInt("item1Cnt"),rs.getInt("item2Cnt"),rs.getInt("item3Cnt"),rs.getInt("item4Cnt"));
+						}
+					}
+				}
+			}
+		} catch ( Exception ex ) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				rs.close();
+				conn.close();
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return loginView;
+	}
+
+	public UserDTO login(String userId) {
+		
+		PreparedStatement pstmt = null;
+		UserDTO userDTO = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBConnection.getInstance().getConn();
+			
+			pstmt = conn.prepareStatement(LOGIN_BY_ID);
+			pstmt.setString(1,userId);
+			rs = pstmt.executeQuery();
+			
+			// 
+			if (rs.next()) {
+				System.out.println("Old User Login");
+				userDTO = new UserDTO(rs.getString("userid"),rs.getString("name"),rs.getInt("platform"));
+			} 
+		} catch ( Exception ex ) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				rs.close();
+				conn.close();
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return userDTO;
+	}
+	/*
 	public UserDTO login(String userId) {
 		
 		PreparedStatement pstmt = null;
@@ -153,7 +245,7 @@ public class UserDAO {
 		}
 		return userDTO;
 	}
-	
+	*/
 	public UserDTO login(String userId, String name) {
 		
 		PreparedStatement pstmt = null;
@@ -186,38 +278,6 @@ public class UserDAO {
 		return userDTO;
 	}
 	
-	public UserDTO login(String userId, String name, int platform) {
-		
-		PreparedStatement pstmt = null;
-		UserDTO userDTO = null;
-		Connection conn = null;
-		ResultSet rs = null;
-		
-		try {
-			conn = DBConnection.getInstance().getConn();
-			
-			pstmt = conn.prepareStatement(LOGIN_BY_ID_NAME_PLATFORM);
-			pstmt.setString(1,userId);
-			pstmt.setString(2,name);
-			pstmt.setInt(3, platform);
-			rs = pstmt.executeQuery();
-			
-			if (rs.next()) {
-				userDTO = new UserDTO(rs.getString("userid"),rs.getString("name"),rs.getInt("platform"));
-			}
-		} catch ( Exception ex ) {
-			ex.printStackTrace();
-		} finally {
-			try {
-				pstmt.close();
-				rs.close();
-				conn.close();
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-		return userDTO;
-	}
 	
 	public List<UserDTO> getUsers() {
 		final String sql =  "select * from user;";

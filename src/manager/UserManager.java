@@ -1,10 +1,7 @@
 package manager;
 
-import java.util.ArrayList;
-
-import java.util.ArrayList;
-
 import DAO.UserDAO;
+import DTO.LoginView;
 import DTO.UserDTO;
 
 public class UserManager {
@@ -28,7 +25,7 @@ public class UserManager {
 		return userDao.login(userId, name);
 	}
 	
-	public UserDTO login(String userId, String name, int platform) {
+	public LoginView login(String userId, String name, int platform) {
 		return userDao.login(userId, name, platform);
 	}
 	

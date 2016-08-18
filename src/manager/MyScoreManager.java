@@ -1,7 +1,11 @@
 package manager;
 
+import java.util.List;
+
 import DAO.MyScoreDAO;
+import DTO.FriendView;
 import DTO.MyScoreDTO;
+import DTO.ScoreView;
 
 public class MyScoreManager {
 	
@@ -26,6 +30,14 @@ public class MyScoreManager {
 	
 	public MyScoreDTO getMyScore(String userId) {
 		return myScoreDAO.getMyScore(userId);
+	}
+	
+	public List<ScoreView> getScores() {
+		return myScoreDAO.getScores();
+	}
+	
+	public List<FriendView> getFriendScores(List<String> friendList) {
+		return myScoreDAO.getFriendScores(friendList);
 	}
 
 }

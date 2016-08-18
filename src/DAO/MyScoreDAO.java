@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import module.DBConnection;
+import DTO.FriendView;
 import DTO.MyScoreDTO;
-import DTO.UserDTO;
+import DTO.ScoreView;
 
 public class MyScoreDAO {
 	
@@ -17,6 +18,8 @@ public class MyScoreDAO {
 	private final String INSERT_MYSCORE_SQL = "insert into myscore (userid,exp,userlevel) values(?,?,?);";
 	private final String UPDATE_MYSCORE_SQL = "update myscore set exp=?, userlevel=? where userid=?;";
 	private final String RETRIEVE_MYSCORE_SQL = "select * from myscore where userid=?;";
+	private final String RETRIEVE_FRIEND_SCORE_SQL = "select * from score_view where userid=?;";
+	private final String RETRIEVE_TOP20_SQL = "select * from score_view limit 20;";
 	
 	private static MyScoreDAO myScoreDAO;
 	static {
@@ -168,25 +171,22 @@ public class MyScoreDAO {
 		return myScoreDTO;
 	}
 	
-	
-	/*
-	public List<ScoreDTO> getScores() {
-		final String sql =  "select * from score;";
+	public List<ScoreView> getScores() {
 		
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		List<ScoreDTO> scoreList = null;
+		List<ScoreView> scoreList = null;
 		
 		try {
-			scoreList = new ArrayList<ScoreDTO>();
+			scoreList = new ArrayList<ScoreView>();
 			conn = DBConnection.getInstance().getConn();
 			
-            pstmt = conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(RETRIEVE_TOP20_SQL);
             rs = pstmt.executeQuery();
                 
             while(rs.next()){
-            	scoreList.add(new ScoreDTO(rs.getString("userId"),rs.getInt("score"),rs.getInt("userLevel")));
+            	scoreList.add(new ScoreView(rs.getString("name"),rs.getInt("exp"),rs.getInt("userLevel")));
 			}
 		} catch (SQLException e ) {
 	        e.printStackTrace();
@@ -201,6 +201,43 @@ public class MyScoreDAO {
             } 
 	    }
 		return scoreList;
-	}*/
+	}
+	
+	public List<FriendView> getFriendScores(List<String> friendList) {
+		
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		List<FriendView> friends = null;
+		
+		try {
+			friends = new ArrayList<FriendView>();
+			conn = DBConnection.getInstance().getConn();
+			
+			for(String friendId : friendList) {
+				pstmt = conn.prepareStatement(RETRIEVE_FRIEND_SCORE_SQL);
+				pstmt.setString(1,friendId);
+	            rs = pstmt.executeQuery();
+	            
+	            if(rs.next()) {
+	            	friends.add(new FriendView(rs.getString("userid"), rs.getString("name")
+	            			,rs.getInt("exp"),rs.getInt("userLevel")));
+	            }
+			}
+			
+		} catch (SQLException e ) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    } finally {
+	    	if (pstmt != null) try { pstmt.close(); } catch(SQLException ex) {}
+            if (conn != null) {
+            	try { 
+                	conn.close(); 
+            	} catch(SQLException ex) {}
+            } 
+	    }
+		return friends;
+	}
 
 }

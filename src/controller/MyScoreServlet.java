@@ -1,7 +1,12 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,9 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import manager.MyScoreManager;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import DTO.FriendView;
 import DTO.MyScoreDTO;
+import DTO.ScoreView;
 
 /**
  * Servlet implementation class ScoreServlet
@@ -63,8 +73,19 @@ public class MyScoreServlet extends HttpServlet {
 				jsonOut(response, myScoreMgr.getMyScore(userId));
 				break;
 			
-			/*case "all" :
-				break;*/
+			case "list" :
+				jsonOut(response, myScoreMgr.getScores());
+				break;
+				
+			case "friends" :
+				String friendsJson = request.getParameter("friends");
+				System.out.println("fJson : " + friendsJson);
+				
+				jsonOut(response, (ArrayList<FriendView>)myScoreMgr.getFriendScores(friendsJsonToList(friendsJson)));
+				//for(String s : friendsJsonToList(f))
+					//System.out.println(s);
+				//jsonOut(request, response, userId);
+				break;
 		
 		}
 	}
@@ -84,7 +105,7 @@ public class MyScoreServlet extends HttpServlet {
 			
 		} catch(NullPointerException npe) {
 			npe.printStackTrace();
-			scoreJson.put("resultCode", "0");
+			scoreJson.put("resultCode", "-1");
 			scoreJson.put("errorCode", "");
 			scoreJson.put("errorDescription", "");
 			
@@ -114,7 +135,7 @@ public class MyScoreServlet extends HttpServlet {
 			
 		} catch(NullPointerException npe) {
 			npe.printStackTrace();
-			scoreJson.put("resultCode", "0");
+			scoreJson.put("resultCode", "-1");
 			scoreJson.put("errorCode", "");
 			scoreJson.put("errorDescription", "");
 			
@@ -125,6 +146,104 @@ public class MyScoreServlet extends HttpServlet {
 			pw.close();
 		}
 		return ;
+	}
+	
+	private void jsonOut(HttpServletResponse response, List<ScoreView> scoreList) throws ServletException, IOException {
+		
+		JSONArray scoreArr = new JSONArray();
+		JSONObject scoreJson = null;
+		try {
+			if(scoreList != null) {
+				for(ScoreView score : scoreList) {
+					scoreJson = new JSONObject();
+					scoreJson.put("resultCode", "1");
+					scoreJson.put("timestamp", System.currentTimeMillis());
+					scoreJson.put("name", score.getName());
+					scoreJson.put("exp", score.getExp());
+					scoreJson.put("userLevel", score.getUserLevel());
+					
+					scoreArr.add(scoreJson);
+				}
+			} else {
+				scoreJson.put("resultCode", "0");
+				scoreJson.put("errorCode", "");
+				scoreJson.put("errorDescription", "");
+			}
+			
+		} catch(NullPointerException npe) {
+			npe.printStackTrace();
+			scoreJson.put("resultCode", "-1");
+			scoreJson.put("errorCode", "");
+			scoreJson.put("errorDescription", "");
+			
+		} finally {
+			System.out.println(scoreArr);
+			PrintWriter pw = response.getWriter();
+			pw.print(scoreArr.toString());
+			pw.close();
+		}
+		return ;
+	}
+	
+	private void jsonOut(HttpServletResponse response, ArrayList<FriendView> friendList) throws ServletException, IOException {
+		
+		System.out.println("friendList : " +friendList );
+		JSONArray scoreArr = new JSONArray();
+		JSONObject scoreJson = null;
+		try {
+			if(friendList != null) {
+				for(FriendView friend : friendList) {
+					scoreJson = new JSONObject();
+					scoreJson.put("resultCode", "1");
+					scoreJson.put("timestamp", System.currentTimeMillis());
+					scoreJson.put("userId", friend.getUserId());
+					scoreJson.put("name", friend.getName());
+					scoreJson.put("exp", friend.getExp());
+					scoreJson.put("userLevel", friend.getUserLevel());
+					
+					scoreArr.add(scoreJson);
+				}
+			} else {
+				scoreJson.put("resultCode", "0");
+				scoreJson.put("errorCode", "");
+				scoreJson.put("errorDescription", "");
+			}
+			
+		} catch(NullPointerException npe) {
+			npe.printStackTrace();
+			scoreJson.put("resultCode", "-1");
+			scoreJson.put("errorCode", "");
+			scoreJson.put("errorDescription", "");
+			
+		} finally {
+			System.out.println(scoreArr);
+			PrintWriter pw = response.getWriter();
+			pw.print(scoreArr.toString());
+			pw.close();
+		}
+		return ;
+		
+	}
+	
+	private List<String> friendsJsonToList(String jsonArr) {
+		
+		JSONArray arr = null;
+		List<String> list = null;
+		try {
+			
+			JSONParser jsonParser = new JSONParser();
+			arr = (JSONArray) jsonParser.parse(jsonArr);
+			
+			list = new ArrayList<String>(arr.size());
+			for(int i=0; i<arr.size(); i++)
+				list.add( ((JSONObject)arr.get(i)).get("friendId").toString() );
+			
+		} catch (ParseException pe) {
+			pe.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

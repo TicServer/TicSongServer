@@ -69,7 +69,7 @@ public class RegisterServlet extends HttpServlet {
 				registerJson.put("errorDescription", "");
 				
 			} finally {
-				
+				System.out.println(registerJson);
 				PrintWriter pw = response.getWriter();
 				pw.print(registerJson.toString());
 				pw.close();
