@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class ScoreView implements Serializable {
 	
+	private String userId;
 	private String name;
 	private int exp;
 	private int userLevel;
@@ -12,11 +13,22 @@ public class ScoreView implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ScoreView(String name, int exp, int userLevel) {
+	public ScoreView(String userId, String name, int exp, int userLevel) {
 		super();
+		this.userId = userId;
 		this.name = name;
 		this.exp = exp;
 		this.userLevel = userLevel;
+	}
+
+	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -45,8 +57,8 @@ public class ScoreView implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ScoreView [name=" + name + ", exp=" + exp + ", userLevel="
-				+ userLevel + "]";
+		return "ScoreView [userId=" + userId + ", name=" + name + ", exp="
+				+ exp + ", userLevel=" + userLevel + "]";
 	}
 
 }

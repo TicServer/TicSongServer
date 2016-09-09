@@ -37,4 +37,8 @@ public class UserManager {
 		return userDao.insertUser(userId, name, platform);
 	}
 	
+	public int deleteUser(String userId) {
+		return userDao.deleteUser(userId);
+	}
+	
 }

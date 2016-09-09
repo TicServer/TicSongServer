@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import module.DBConnection;
-import DTO.FriendView;
 import DTO.MyScoreDTO;
 import DTO.ScoreView;
 
@@ -29,8 +28,6 @@ public class MyScoreDAO {
 		return myScoreDAO;
 	}
 	private MyScoreDAO(){}
-	
-	
 	
 	
 	public int insertMyScore(MyScoreDTO myScore) {
@@ -186,7 +183,8 @@ public class MyScoreDAO {
             rs = pstmt.executeQuery();
                 
             while(rs.next()){
-            	scoreList.add(new ScoreView(rs.getString("name"),rs.getInt("exp"),rs.getInt("userLevel")));
+            	scoreList.add(new ScoreView(rs.getString("userId"), rs.getString("name"),
+            			rs.getInt("exp"),rs.getInt("userLevel")));
 			}
 		} catch (SQLException e ) {
 	        e.printStackTrace();
@@ -203,15 +201,15 @@ public class MyScoreDAO {
 		return scoreList;
 	}
 	
-	public List<FriendView> getFriendScores(List<String> friendList) {
+	public List<ScoreView> getFriendScores(List<String> friendList) {
 		
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		List<FriendView> friends = null;
+		List<ScoreView> friends = null;
 		
 		try {
-			friends = new ArrayList<FriendView>();
+			friends = new ArrayList<ScoreView>();
 			conn = DBConnection.getInstance().getConn();
 			
 			for(String friendId : friendList) {
@@ -220,7 +218,7 @@ public class MyScoreDAO {
 	            rs = pstmt.executeQuery();
 	            
 	            if(rs.next()) {
-	            	friends.add(new FriendView(rs.getString("userid"), rs.getString("name")
+	            	friends.add(new ScoreView(rs.getString("userid"), rs.getString("name")
 	            			,rs.getInt("exp"),rs.getInt("userLevel")));
 	            }
 			}

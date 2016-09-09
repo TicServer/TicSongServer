@@ -1,9 +1,6 @@
 package controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +17,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import DTO.FriendView;
 import DTO.MyScoreDTO;
 import DTO.ScoreView;
 
@@ -74,19 +70,23 @@ public class MyScoreServlet extends HttpServlet {
 				break;
 			
 			case "list" :
-				jsonOut(response, myScoreMgr.getScores());
+				List<ScoreView> topRanker = myScoreMgr.getScores();
+				System.out.println("[ Top 20 ]\n" + topRanker + "\n");
+				jsonOut(response, topRanker);
 				break;
 				
 			case "friends" :
 				String friendsJson = request.getParameter("friends");
 				System.out.println("fJson : " + friendsJson);
 				
-				jsonOut(response, (ArrayList<FriendView>)myScoreMgr.getFriendScores(friendsJsonToList(friendsJson)));
-				//for(String s : friendsJsonToList(f))
-					//System.out.println(s);
-				//jsonOut(request, response, userId);
+				List<String> fList = friendsJsonToList(friendsJson);
+				System.out.println("Friend Id List : \n" + fList +"\n");
+				
+				List<ScoreView> fListOut = myScoreMgr.getFriendScores(fList);
+				System.out.println("[ Friend List Result ] \n" + fListOut + "\n");
+				
+				jsonOut(response, fListOut);
 				break;
-		
 		}
 	}
 	
@@ -158,6 +158,7 @@ public class MyScoreServlet extends HttpServlet {
 					scoreJson = new JSONObject();
 					scoreJson.put("resultCode", "1");
 					scoreJson.put("timestamp", System.currentTimeMillis());
+					scoreJson.put("userId", score.getUserId());
 					scoreJson.put("name", score.getName());
 					scoreJson.put("exp", score.getExp());
 					scoreJson.put("userLevel", score.getUserLevel());
@@ -177,7 +178,7 @@ public class MyScoreServlet extends HttpServlet {
 			scoreJson.put("errorDescription", "");
 			
 		} finally {
-			System.out.println(scoreArr);
+			//System.out.println(scoreArr);
 			PrintWriter pw = response.getWriter();
 			pw.print(scoreArr.toString());
 			pw.close();
@@ -185,14 +186,14 @@ public class MyScoreServlet extends HttpServlet {
 		return ;
 	}
 	
-	private void jsonOut(HttpServletResponse response, ArrayList<FriendView> friendList) throws ServletException, IOException {
+	/*private void jsonOut(HttpServletResponse response, ArrayList<ScoreView> friendList) throws ServletException, IOException {
 		
 		System.out.println("friendList : " +friendList );
 		JSONArray scoreArr = new JSONArray();
 		JSONObject scoreJson = null;
 		try {
 			if(friendList != null) {
-				for(FriendView friend : friendList) {
+				for(ScoreView friend : friendList) {
 					scoreJson = new JSONObject();
 					scoreJson.put("resultCode", "1");
 					scoreJson.put("timestamp", System.currentTimeMillis());
@@ -223,7 +224,7 @@ public class MyScoreServlet extends HttpServlet {
 		}
 		return ;
 		
-	}
+	}*/
 	
 	private List<String> friendsJsonToList(String jsonArr) {
 		

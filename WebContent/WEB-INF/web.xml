@@ -49,4 +49,14 @@
     <servlet-name>ItemServlet</servlet-name>
     <url-pattern>/item.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>user.do</display-name>
+    <servlet-name>user.do</servlet-name>
+    <servlet-class>controller.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>user.do</servlet-name>
+    <url-pattern>/user.do</url-pattern>
+  </servlet-mapping>
 </web-app>
