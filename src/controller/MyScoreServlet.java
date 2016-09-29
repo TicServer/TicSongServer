@@ -49,7 +49,7 @@ public class MyScoreServlet extends HttpServlet {
 		int exp, userLevel = 0;
 		
 		String service = request.getParameter("service");
-		System.out.println("Service : " + service);
+		System.out.println("MyScore Service : " + service + " / " + userId);
 		switch(service) {
 			case "insert" :
 				exp = Integer.parseInt(request.getParameter("exp"));
@@ -71,18 +71,17 @@ public class MyScoreServlet extends HttpServlet {
 			
 			case "list" :
 				List<ScoreView> topRanker = myScoreMgr.getScores();
-				System.out.println("[ Top 20 ]\n" + topRanker + "\n");
+				//System.out.println("[ Top 20 ]\n" + topRanker + "\n");
 				jsonOut(response, topRanker);
 				break;
 				
 			case "friends" :
 				String friendsJson = request.getParameter("friends");
-				System.out.println("fJson : " + friendsJson);
+				System.out.println("frJson Request : " + friendsJson);
 				
-				List<String> fList = friendsJsonToList(friendsJson);
-				System.out.println("Friend Id List : \n" + fList +"\n");
+				//List<String> fList = friendsJsonToList(friendsJson);
+				List<ScoreView> fListOut = myScoreMgr.getFriendScores(friendsJsonToList(friendsJson));
 				
-				List<ScoreView> fListOut = myScoreMgr.getFriendScores(fList);
 				System.out.println("[ Friend List Result ] \n" + fListOut + "\n");
 				
 				jsonOut(response, fListOut);

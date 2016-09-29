@@ -166,12 +166,12 @@ public class UserDAO {
 				
 				
 			} else {
-				System.out.println("New User Login; welcome.");
+				
 				if( insertUser(userId, name, platform)==1 ) {
-					System.out.println("New User Register. OK.");
+					System.out.println("New User Login; welcome.\nNew User Register. OK.");
 					
 					if( MyScoreManager.getInstance().insertMyScore(new MyScoreDTO(userId, 0, 1))==1 ) 
-						if( ItemManager.getInstance().insertItem(new ItemDTO(userId, 0, 0, 0, 0))==1 ) {
+						if( ItemManager.getInstance().insertItem(new ItemDTO(userId, 10, 10, 10, 10))==1 ) {
 							
 							pstmt = conn.prepareStatement(LOGIN_VIEW);
 							pstmt.setString(1,userId);

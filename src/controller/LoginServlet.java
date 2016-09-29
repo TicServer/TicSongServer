@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("GET request.");
+		//System.out.println("GET request.");
 		doPost(request, response);
 	}
 	/**
@@ -38,12 +38,11 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
 		
-		System.out.println("POST request.");
+		//System.out.println("POST request.");
 		response.setContentType("application/json;charset=utf-8");
 		
 		String userAgent = request.getHeader("User-Agent").split("/")[0];
-		System.out.println("Login UserAgent : " + userAgent+
-				"\nContentType : " + request.getContentType());
+		//System.out.println("Login UserAgent : " + userAgent+"\nContentType : " + request.getContentType());
 	
 		String userId = request.getParameter("userId");
 		String name = request.getParameter("name");
@@ -53,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 			platform = Integer.parseInt(platformStr);
 		}
 		
-		System.out.println("Request Id : "+userId+"\nRequest Name : "
+		System.out.println("-----------------------------------------\nRequest Id : "+userId+"\nRequest Name : "
 				+name+"\nRequest Platform : " + platform);
 		
 		UserManager userM = UserManager.getInstance();
@@ -82,8 +81,7 @@ public class LoginServlet extends HttpServlet {
 				loginJson.put("errorDescription", "");
 				
 			} finally {
-				System.out.println("Login Server Out : OK");
-				System.out.println(loginJson + "\n-----------------------------------------\n");
+				System.out.println("Login Server Response : OK\n-----------------------------------------\n");
 				
 				PrintWriter pw = response.getWriter();
 				pw.print(loginJson.toString());

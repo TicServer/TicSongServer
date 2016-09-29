@@ -90,9 +90,10 @@ public class MyScoreDAO {
             pstmt = conn.prepareStatement(USER_CHECK_SQL);
             pstmt.setString(1, myScore.getUserId());
             rs = pstmt.executeQuery();
+            
+            conn.setAutoCommit(false);
                 
             if(rs.next()){
-            	conn.setAutoCommit(false);
 					
                     pstmt = conn.prepareStatement(UPDATE_MYSCORE_SQL);
                     pstmt.setInt(1, myScore.getExp());

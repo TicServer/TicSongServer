@@ -51,7 +51,7 @@ public class ItemServlet extends HttpServlet {
 		int item1Cnt,item2Cnt,item3Cnt,item4Cnt = 0;
 		
 		String service = request.getParameter("service");
-		System.out.println("Service : " + service);
+		System.out.println("Item Service : " + service + " / " + userId);
 		switch(service) {
 		case "insert" :
 			item1Cnt = Integer.parseInt(request.getParameter("item1Cnt"));

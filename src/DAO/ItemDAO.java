@@ -87,9 +87,10 @@ public class ItemDAO {
             pstmt = conn.prepareStatement(USER_CHECK_SQL);
             pstmt.setString(1, item.getUserId());
             rs = pstmt.executeQuery();
-
+            conn.setAutoCommit(false);
+            
             if(rs.next()){
-                conn.setAutoCommit(false);
+                
                 pstmt = conn.prepareStatement(UPDATE_ITEM_SQL);
                 pstmt.setInt(1, item.getItem1Cnt());
                 pstmt.setInt(2, item.getItem2Cnt());
@@ -124,10 +125,11 @@ public class ItemDAO {
                 }
             }
         } finally {
+        	
             if (pstmt != null) try { pstmt.close(); } catch(SQLException ex) {}
             if (conn != null) {
                 try {
-                    conn.setAutoCommit(true);
+                	conn.setAutoCommit(true);
                     conn.close();
                 } catch(SQLException ex) {}
             }

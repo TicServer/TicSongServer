@@ -41,10 +41,9 @@ public class UserServlet extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String service = request.getParameter("service");
 		
-		System.out.println("Service : " + service);
+		System.out.println("User Service : " + service + " / " + userId);
 		switch(service) {
 		case "delete" :
-			System.out.println("Delete User ID : " + userId);
 			jsonOut(response, userMgr.deleteUser(userId));
 			break;
 		}
