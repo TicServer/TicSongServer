@@ -59,4 +59,17 @@
     <servlet-name>user.do</servlet-name>
     <url-pattern>/user.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SongListServlet</display-name>
+    <servlet-name>SongListServlet</servlet-name>
+    <servlet-class>controller.SongListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SongListServlet</servlet-name>
+    <url-pattern>/songs</url-pattern>
+  </servlet-mapping>
+  <listener>
+    <listener-class>listener.TicsongContextListener</listener-class>
+  </listener>
 </web-app>
